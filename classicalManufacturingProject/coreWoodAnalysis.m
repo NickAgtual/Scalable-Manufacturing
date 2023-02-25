@@ -30,9 +30,21 @@ core.totalVolume = core.stringerLength * core.stringerWidth * ...
 
 %% Weight Analysis
 
-% ----- Defining different core combinations ------
+% Defining different core combinations
+weight(1).type = 'Solid Core';
+weight(2).type = 'Reinforced Edge';
+weight(3).type = 'Reinforced Center';
+weight(4).type = 'Reinforced Edge and Center';
+
 % Solid core
+for ii = 1:length(wood)
+    
+    weight(1).totalWeight(ii) = wood(ii).density * core.totalVolume;
+    
+end
+
 % Reinforced edge
+
 % Reinforced center
 % Reinforced edge and center
 
