@@ -55,32 +55,38 @@ weight(4).variation = [3 1 1 3 3 1 1 1; ...
                        4 1 1 4 4 1 1 1; ...
                        3 2 2 3 3 2 2 2; ...
                        4 2 2 4 4 2 2 2];
-
-% ----- Solid core -----
-for ii = 1:length(wood)
-    
-    weight(1).totalWeight(ii) = wood(ii).density * core.stringerVol * ...
-        core.numStringers;
-    
-end
-
-% ----- Reinforced edge -----
-
+                   
 % Initializing weights
-[weight(2).totalWeight,  = zeros(1, 4);
+[weight(1).totalWeight, weight(2).totalWeight, ...
+    weight(3).totalWeight, weight(4).totalWeight] = deal(zeros(1, 4));
 
-for ii = 1:size(weight(2).variation, 1)
-    for jj = 1:size(weight(2).variation, 2)
-        
-        weight(2).totalWeight(ii) = weight(2).totalWeight(ii) + ...
-            (core.stringerVol * wood(weight(2).variation(jj)).density);
-        
+% Calculating weight for all different core variations
+for ii = 1:length(weight)
+    for jj = 1:size(weight(1).variation, 1)
+        for kk = 1:size(weight(1).variation, 2)
+            
+            weight(ii).totalWeight(jj) = weight(ii).totalWeight(jj) + ...
+                (core.stringerVol * ...
+                wood(weight(ii).variation(kk)).density);
+            
+        end
     end
 end
 
+%% Plotting Weight of Core Variations
 
-% Reinforced center
-% Reinforced edge and center
+% Concatenating bar graph data
+barGraph.weightData = [weight(1).totalWeight; weight(2).totalWeight; ...
+                       weight(3).totalWeight; weight(4).totalWeight];
+
+% Creating new figure
+figure(1)
+
+% Plotting bar graph
+bar(barGraph.weightData)
+
+
+
 
 
 

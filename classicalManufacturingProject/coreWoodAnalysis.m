@@ -42,7 +42,10 @@ weight(4).type = 'Reinforced Edge and Center';
 % 2 = Aspen
 % 3 Beech
 % 4 Birch
-weight(1).variation = ones(length(wood), core.numStringers);
+weight(1).variation = [ones(1, core.numStringers); ...
+                       2 * ones(1, core.numStringers); ...
+                       3 * ones(1, core.numStringers); ...
+                       4 * ones(1, core.numStringers)];
 weight(2).variation = [3 1 1 1 1 1 1 3; ...
                        4 1 1 1 1 1 1 3; ...
                        3 2 2 2 2 2 2 3; ...
@@ -62,16 +65,30 @@ weight(4).variation = [3 1 1 3 3 1 1 1; ...
 
 % Calculating weight for all different core variations
 for ii = 1:length(weight)
-    for jj = 1:size(weight(2).variation, 1)
-        for kk = 1:size(weight(2).variation, 2)
+    for jj = 1:size(weight(1).variation, 1)
+        for kk = 1:size(weight(1).variation, 2)
             
             weight(ii).totalWeight(jj) = weight(ii).totalWeight(jj) + ...
                 (core.stringerVol * ...
-                wood(weight(ii).variation(kk)).density);
+                wood(weight(ii).variation(jj, kk)).density);
             
         end
     end
 end
+
+%% Plotting Weight of Core Variations
+
+% Concatenating bar graph data
+barGraph.weightData = [weight(1).totalWeight; weight(2).totalWeight; ...
+                       weight(3).totalWeight; weight(4).totalWeight];
+
+% Creating new figure
+figure(1)
+
+% Plotting bar graph
+bar(barGraph.weightData)
+
+
 
 
 
