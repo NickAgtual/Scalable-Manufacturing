@@ -85,9 +85,23 @@ barGraph.weightData = [weight(1).totalWeight; weight(2).totalWeight; ...
 % Creating new figure
 figure(1)
 
-% Plotting bar graph
-bar(barGraph.weightData)
+barGraph.categories = categorical({weight(1).type, weight(2).type, ...
+    weight(3).type, weight(4).type});
+barGraph.categories = reordercats(barGraph.categories,{weight(1).type, ...
+    weight(2).type, weight(3).type, weight(4).type});
 
+% Plotting bar graph
+barGraph.graph = bar(barGraph.categories, barGraph.weightData); 
+
+% Plot characteristics
+grid on
+grid minor
+
+% Plot descriptors
+title('\emph{Weight of Core Wood and Layup Variations}', 'fontsize', ...
+    16, 'Interpreter', 'Latex')
+ylabel('\emph{Weight (g)}',...
+    'fontsize', 14, 'Interpreter', 'Latex')
 
 
 

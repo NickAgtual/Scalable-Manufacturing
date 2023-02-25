@@ -42,7 +42,10 @@ weight(4).type = 'Reinforced Edge and Center';
 % 2 = Aspen
 % 3 Beech
 % 4 Birch
-weight(1).variation = ones(length(wood), core.numStringers);
+weight(1).variation = [ones(1, core.numStringers); ...
+                       2 * ones(1, core.numStringers); ...
+                       3 * ones(1, core.numStringers); ...
+                       4 * ones(1, core.numStringers)];
 weight(2).variation = [3 1 1 1 1 1 1 3; ...
                        4 1 1 1 1 1 1 3; ...
                        3 2 2 2 2 2 2 3; ...
@@ -67,7 +70,7 @@ for ii = 1:length(weight)
             
             weight(ii).totalWeight(jj) = weight(ii).totalWeight(jj) + ...
                 (core.stringerVol * ...
-                wood(weight(ii).variation(kk)).density);
+                wood(weight(ii).variation(jj, kk)).density);
             
         end
     end
@@ -82,8 +85,38 @@ barGraph.weightData = [weight(1).totalWeight; weight(2).totalWeight; ...
 % Creating new figure
 figure(1)
 
+barGraph.categories = categorical({weight(1).type, weight(2).type, ...
+    weight(3).type, weight(4).type});
+barGraph.categories = reordercats(barGraph.categories,{weight(1).type, ...
+    weight(2).type, weight(3).type, weight(4).type});
+
 % Plotting bar graph
-bar(barGraph.weightData)
+braGraph.graph = bar(barGraph.categories, barGraph.weightData);
+
+
+clr = [223 145 167; 
+    178 198 65; 
+    134 156 211] / 255;
+
+barGraph.graph.CData = clr;
+
+% Plot characteristics
+grid on
+grid minor
+
+% Plot descriptors
+title('\emph{Weight of Core Wood and Layup Variations}', 'fontsize', ...
+    16, 'Interpreter', 'Latex')
+ylabel('\emph{Weight (g)}',...
+    'fontsize', 14, 'Interpreter', 'Latex')
+
+hT=[];              % placeholder for text object handles
+for i=1:length(barGraph.graph)  % iterate over number of bar objects
+  hT=[hT,...
+      text(barGraph.graph(i).XData+barGraph.graph(i).XOffset,barGraph.graph(i).YData,labels(:,i), ...
+          'VerticalAlignment','bottom','horizontalalign','center')];
+end
+
 
 
 
