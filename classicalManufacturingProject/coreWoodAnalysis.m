@@ -14,6 +14,12 @@ wood(2).density = .401;
 wood(3).density = .655;
 wood(4).density = .552;
 
+% Costs of potentia wood choices
+wood(1).cost = .5;
+wood(2).cost = .6;
+wood(3).cost = .7;
+wood(4).cost = .9;
+
 %% Defining Properties of Snowboard Core
 
 % Dimesnions of core stringers
@@ -59,9 +65,11 @@ weight(4).variation = [3 1 1 3 3 1 1 1; ...
                        3 2 2 3 3 2 2 2; ...
                        4 2 2 4 4 2 2 2];
                    
-% Initializing weights
+% Initializing weights & costs
 [weight(1).totalWeight, weight(2).totalWeight, ...
-    weight(3).totalWeight, weight(4).totalWeight] = deal(zeros(1, 4));
+    weight(3).totalWeight, weight(4).totalWeight, weight(1).totalCost, ...
+    weight(2).totalCost, weight(3).totalCost, weight(4).totalCost] = ...
+    deal(zeros(1, 4));
 
 % Calculating weight for all different core variations
 for ii = 1:length(weight)
@@ -71,6 +79,10 @@ for ii = 1:length(weight)
             weight(ii).totalWeight(jj) = weight(ii).totalWeight(jj) + ...
                 (core.stringerVol * ...
                 wood(weight(ii).variation(jj, kk)).density);
+            
+            weight(ii).totalCost(jj) = weight(ii).totalCost(jj) + ...
+                (core.stringerVol * ...
+                wood(weight(ii).variation(jj, kk)).cost);
             
         end
     end
@@ -85,6 +97,7 @@ barGraph.weightData = [weight(1).totalWeight; weight(2).totalWeight; ...
 % Creating new figure
 figure(1)
 
+% Defining categories for bar chart
 barGraph.categories = categorical({weight(1).type, weight(2).type, ...
     weight(3).type, weight(4).type});
 barGraph.categories = reordercats(barGraph.categories,{weight(1).type, ...
@@ -98,15 +111,35 @@ grid on
 grid minor
 
 % Plot descriptors
-title('\emph{Weight of Core Wood and Layup Variations}', 'fontsize', ...
+title('\emph{Weight of Core for Wood and Layup Variations}', 'fontsize', ...
     16, 'Interpreter', 'Latex')
 ylabel('\emph{Weight (g)}',...
     'fontsize', 14, 'Interpreter', 'Latex')
 
+%% Plotting Cost of Core Variations
+% Concatenating bar graph data
+barGraph.costData = [weight(1).totalCost; weight(2).totalCost; ...
+                       weight(3).totalCost; weight(4).totalCost];
 
+% Creating new figure
+figure(2)
 
+% Defining categories for bar chart
+barGraph.categories = categorical({weight(1).type, weight(2).type, ...
+    weight(3).type, weight(4).type});
+barGraph.categories = reordercats(barGraph.categories,{weight(1).type, ...
+    weight(2).type, weight(3).type, weight(4).type});
 
+% Plotting bar graph
+barGraph.graph = bar(barGraph.categories, barGraph.costData); 
 
+% Plot characteristics
+grid on
+grid minor
 
-
+% Plot descriptors
+title('\emph{Cost of Core Raw Material}', 'fontsize', ...
+    16, 'Interpreter', 'Latex')
+ylabel('\emph{U.S Dollars}',...
+    'fontsize', 14, 'Interpreter', 'Latex')
 
