@@ -14,17 +14,19 @@ wood(2).density = .401;
 wood(3).density = .655;
 wood(4).density = .552;
 
-% Costs of potentia wood choices
-wood(1).cost = .5;
-wood(2).cost = .6;
-wood(3).cost = .7;
-wood(4).cost = .9;
+% Costs of potential wood choices
+% 1 ft = 30.48 cm
+% 16 stringers in 1 board foot
+wood(1).cost = 3 / (30.48 * 16); % $/cm
+wood(2).cost = 3.55 / (30.48 * 16); % $/cm
+wood(3).cost = 4 / (30.48 * 16); % $/cm
+wood(4).cost = 6 / (30.48 * 16); % $/cm
 
 %% Defining Properties of Snowboard Core
 
 % Dimesnions of core stringers
 core.stringerLength = 153; %[cm]
-core.stringerWidth = 1; % [cm]
+core.stringerWidth = 3/4; % [cm]
 core.stringerThickness = 1; % [cm]
 
 % Number of stringers in snowbaord core
@@ -34,7 +36,7 @@ core.numStringers = 8;
 core.stringerVol = core.stringerLength * core.stringerWidth * ...
     core.stringerThickness; %[cc]
 
-%% Weight Analysis
+%% Weight & Cost Analysis
 
 % ----- Defining different core combinations -----
 % Variation type
@@ -46,14 +48,14 @@ weight(4).type = 'Reinforced Edge and Center';
 % Variation identification matrices
 % 1 = Poplar
 % 2 = Aspen
-% 3 Beech
-% 4 Birch
+% 3 = Beech
+% 4 = Birch
 weight(1).variation = [ones(1, core.numStringers); ...
                        2 * ones(1, core.numStringers); ...
                        3 * ones(1, core.numStringers); ...
                        4 * ones(1, core.numStringers)];
 weight(2).variation = [3 1 1 1 1 1 1 3; ...
-                       4 1 1 1 1 1 1 3; ...
+                       4 1 1 1 1 1 1 4; ...
                        3 2 2 2 2 2 2 3; ...
                        4 2 2 2 2 2 2 4];
 weight(3).variation = [1 1 1 3 3 1 1 1; ...
@@ -62,8 +64,8 @@ weight(3).variation = [1 1 1 3 3 1 1 1; ...
                        2 2 2 4 4 2 2 2];
 weight(4).variation = [3 1 1 3 3 1 1 1; ...
                        4 1 1 4 4 1 1 1; ...
-                       3 2 2 3 3 2 2 2; ...
-                       4 2 2 4 4 2 2 2];
+                       3 2 2 3 3 2 2 3; ...
+                       4 2 2 4 4 2 2 4];
                    
 % Initializing weights & costs
 [weight(1).totalWeight, weight(2).totalWeight, ...
@@ -101,7 +103,7 @@ figure(1)
 barGraph.categories = categorical({weight(2).type, ...
     weight(3).type, weight(4).type});
 barGraph.categories = reordercats(barGraph.categories,{weight(2).type, ...
-    weight(3).type, weight(4).type});
+    weight(4).type, weight(3).type});
 
 % Plotting bar graph
 barGraph.weightGraph = bar(categorical({weight(1).type}), ...
